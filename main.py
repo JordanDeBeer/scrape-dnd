@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
+import sys
 from selenium import webdriver
 from monster import Monster
 import json
+import logging
 
 url = "https://www.purpleworm.org/rules/"
 
@@ -24,22 +26,20 @@ elems = driver.find_elements_by_css_selector(
     "span[id^='span00004.00007.0'][id$='outer']"
 )
 for elem in elems:
+    monster_name = elem.text
     elem.click()
     driver.switch_to.parent_frame()
     driver.switch_to.frame("data")
-    table = driver.find_elements_by_css_selector("body > table")
+    tables = driver.find_elements_by_css_selector("body > table")
     # skip multiple species for now
-    if len(table) > 1:
-        driver.switch_to.parent_frame()
-        driver.switch_to.frame("toc")
-        continue
-    try:
-        monsters.append(Monster.from_table(table[0]))
-    except:
-        print(f"could not parse {table.text}")
-        driver.switch_to.parent_frame()
-        driver.switch_to.frame("toc")
-        continue
+    logging.info(f"multi table {monster_name}")
+    for t in tables:
+        try:
+            monsters.append(Monster.from_table(monster_name, t))
+            continue
+        except:
+            if t == tables[-1]:
+                logging.error(f"could not parse {monster_name}: {sys.exc_info()[0]}")
     driver.switch_to.parent_frame()
     driver.switch_to.frame("toc")
 

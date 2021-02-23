@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Monster:
+    name: str
     climate: str
     frequency: str
     organization: str
@@ -15,19 +16,20 @@ class Monster:
     armor_class: int
     movement: str
     hit_dice: str
-    thac0: int
-    num_attacks: int
+    thac0: str
+    num_attacks: str
     damage_per_attack: str
     special_attacks: str
     special_defenses: str
     magic_resistance: str
     size: str
     morale: str
-    xp_value: int
+    xp_value: str
 
     @classmethod
-    def from_table(cls, table):
+    def from_table(cls, name, table):
         return cls(
+            name,
             table.find_element_by_css_selector(
                 "body > table > tbody > tr:nth-child(1) > td:nth-child(2)"
             ).text,
