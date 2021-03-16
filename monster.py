@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class Monster:
     name: str
+    image_url: str
     climate: str
     frequency: str
     organization: str
@@ -27,9 +28,10 @@ class Monster:
     xp_value: str
 
     @classmethod
-    def from_table(cls, name, table):
+    def from_table(cls, name, image_url, table):
         return cls(
             name,
+            image_url,
             table.find_element_by_css_selector(
                 "body > table > tbody > tr:nth-child(1) > td:nth-child(2)"
             ).text,

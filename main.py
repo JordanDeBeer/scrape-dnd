@@ -30,12 +30,15 @@ for elem in elems:
     elem.click()
     driver.switch_to.parent_frame()
     driver.switch_to.frame("data")
+    image_url = driver.find_element_by_tag_name("img")
     tables = driver.find_elements_by_css_selector("body > table")
     # skip multiple species for now
     logging.info(f"multi table {monster_name}")
     for t in tables:
         try:
-            monsters.append(Monster.from_table(monster_name, t))
+            monsters.append(
+                Monster.from_table(monster_name, image_url.get_property("src"), t)
+            )
             continue
         except:
             if t == tables[-1]:
